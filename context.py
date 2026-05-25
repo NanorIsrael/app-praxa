@@ -1,6 +1,6 @@
 import gdown
 from pathlib import Path
-#from ??? import ???
+from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -34,9 +34,8 @@ def load_context_data(path: str = "./context_data") -> list[Document]:
     :return: list of Document objects
     :rtype: list[Document]
     """
-#    loader = ???
-#    return ???
-    pass
+    loader = PyPDFDirectoryLoader(path)
+    return loader.load()
 
 def chunk_context_data(context_data: list[Document]) -> list[Document]:
     """
