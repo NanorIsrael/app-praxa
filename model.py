@@ -1,7 +1,10 @@
 from langchain_community.chat_models import ChatOpenAI
 from typing import Optional, Any
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
+print('=====>', os.getenv('OPENROUTER_API_KEY'))
 class ChatModel(ChatOpenAI):
     """
     Creates a chat model from openrouter.ai using the OpenAI API
@@ -20,7 +23,7 @@ class ChatModel(ChatOpenAI):
             **kwargs
         )
 
-def get_model(model_name: str = "<default model>") -> ChatModel:
+def get_model(model_name: str = "google/gemma-4-31b-it:free") -> ChatModel:
     """
     Gets a reference to a model
     
@@ -37,18 +40,18 @@ def get_model(model_name: str = "<default model>") -> ChatModel:
 
 if __name__ == "__main__":
 # when run as a script, run some tests to demonstrate capabilities
-#    model = get_model()
-#    from langchain_core.messages import SystemMessage, HumanMessage
-#    from langchain.prompts import ChatPromptTemplate
+   model = get_model()
+   from langchain_core.messages import SystemMessage, HumanMessage
+   from langchain.prompts import ChatPromptTemplate
 
-#    ???
-#    ???
-#    ???
-#    ???
+   prompt_template = ChatPromptTemplate([
+    ("human", "You are a helpful assistant."),
+    ("human", "Who is this {person}?")
+    ])
 
 #    response = model.invoke(
-#        [???("You are a helpful assistant."),
-#         ???("What are some plays by Tawfiq al-Hakim?")])
+#        [HumanMessage("You are a helpful assistant."),
+#         HumanMessage("What are some plays by Tawfiq al-Hakim?")])
 #    print(response.content)
 #    print("----------")
 #    response = model.invoke(
@@ -65,8 +68,6 @@ if __name__ == "__main__":
 #    response = model.invoke(prompt_template.invoke({"playwright": "Ryan Calais Cameron"}))
 #    print(response.content)
 
-#    chain = ???
-#    response = ???{"playwright": "Ryan Calais Cameron"})
-#    print(response.content)
-
-    pass
+   chain = prompt_template | model
+   response = chain.invoke({"person": "Jesus Christ"})
+   print(response.content)

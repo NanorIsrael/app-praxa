@@ -45,7 +45,7 @@ def chunk_context_data(context_data: list[Document]) -> list[Document]:
     :type context_data: list[Document]
     :return: the chunked Documents
     :rtype: list[Document]
-    """
+    """                                                                                                                                                
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=100,
