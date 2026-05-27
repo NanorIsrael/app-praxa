@@ -46,15 +46,15 @@ def chunk_context_data(context_data: list[Document]) -> list[Document]:
     :return: the chunked Documents
     :rtype: list[Document]
     """
-#    text_splitter = RecursiveCharacterTextSplitter(
-#        ???,
-#        ???,
-#        ???,
-#        ???
-#    )
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=100,
+        length_function=len,
+        is_separator_regex=False
+    )
 
-#    return ???
-    pass
+    return text_splitter.split_documents(context_data)
+
 
 def get_embedding_model(model_name: str = "sentence-transformers/all-MiniLM-L6-v2") -> HuggingFaceEmbeddings:
     """
@@ -65,8 +65,8 @@ def get_embedding_model(model_name: str = "sentence-transformers/all-MiniLM-L6-v
     :return: The embedding model.
     :rtype: HuggingFaceEmbeddings
     """
-#    return HuggingFaceEmbeddings(model_name=???)
-    pass
+    return HuggingFaceEmbeddings(model_name=model_name)
+
 
 def create_vector_store(chunks: list[Document], embedding_model: Embeddings = get_embedding_model(), path: str = "./chromadb") -> Chroma:
     """
@@ -81,12 +81,12 @@ def create_vector_store(chunks: list[Document], embedding_model: Embeddings = ge
     :return: The vector store
     :rtype: Chroma
     """
-#    return Chroma???
-#        ???,
-#        ???,
-#        persist_directory=???
-#    )
-    pass
+    return Chroma.from_documents(
+    #    collection_name="example_collection",
+       embedding=embedding_model,
+       persist_directory=path,
+       documents=chunks
+   )
     
 def get_vector_store(embedding_model: Embeddings = get_embedding_model(), path: str = "./chromadb") -> Chroma:
     """
@@ -103,27 +103,27 @@ def get_vector_store(embedding_model: Embeddings = get_embedding_model(), path: 
         persist_directory=path,
         embedding_function=embedding_model
     )
-    pass
+
 
 if __name__ == "__main__":
     # when run as a script, run some tests to demonstrate capabilities
-#    pdfs = (
-#        { "url": "https://quanticedu.github.io/praxa/Longest Running Shows on Broadway 2025.pdf",
-#          "filename": "Longest Running Shows on Broadway.pdf" },
-#        { "url": "https://quanticedu.github.io/praxa/Every play and musical coming to the West End in 2025.pdf",
-#          "filename": "Every play and musical coming to the West End in 2025.pdf" }
-#    )
+   pdfs = (
+       { "url": "https://quanticedu.github.io/praxa/Longest Running Shows on Broadway 2025.pdf",
+         "filename": "Longest Running Shows on Broadway.pdf" },
+       { "url": "https://quanticedu.github.io/praxa/Every play and musical coming to the West End in 2025.pdf",
+         "filename": "Every play and musical coming to the West End in 2025.pdf" }
+   )
 #    download_context_data(pdfs)
-#    context_data = load_context_data()
-#    chunks = chunk_context_data(context_data)
-#    embedding_model = get_embedding_model()
-#    vector_store = create_vector_store(chunks, embedding_model)
+   context_data = load_context_data()
+   chunks = chunk_context_data(context_data)
+   embedding_model = get_embedding_model()
+   vector_store = create_vector_store(chunks, embedding_model)
 
 #    for page in context_data:
 #        print(page)
 
 #    for num, chunk in enumerate(chunks):
-#        print("-----")
+# #        print("-----")
 #        print(f"Chunk {num}:")
 #        print(f"Length: {len(chunk.page_content)}")
 #        print(f"Metadata: {chunk.metadata}")
@@ -134,12 +134,10 @@ if __name__ == "__main__":
 #    embedding = embedding_model.embed_query("This is a longer test sentence.")
 #    print(f"Embedding length: {len(embedding)}")
     
-#    retrieved_chunks = vector_store.similarity_search("A play written by Ryan Calais Cameron.")
-#    print(f"Query retrieved {len(retrieved_chunks)} chunks.")
+   retrieved_chunks = vector_store.similarity_search("A play written by Ryan Calais Cameron.")
+   print(f"Query retrieved {len(retrieved_chunks)} chunks.")
 
-#    for chunk in retrieved_chunks:
-#        print(f"Chunk content: {chunk.page_content}")
-#        print(f"Chunk metadata: {chunk.metadata}")
-#        print("-----")
-
-    pass
+   for chunk in retrieved_chunks:
+       print(f"Chunk content: {chunk.page_content}")
+       print(f"Chunk metadata: {chunk.metadata}")
+       print("-----")
